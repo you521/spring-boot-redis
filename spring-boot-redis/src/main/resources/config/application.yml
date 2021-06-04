@@ -1,1 +1,39 @@
-
+server:
+  # 设置端口号
+  port: 8090
+  servlet:
+    # 设置项目名称
+    context-path: /spring-boot-redis
+spring:
+  # 配置缓存（redis作为缓存）
+  cache:
+    # 缓存的类型
+    type: redis
+  # redis配置   
+  redis:
+    # lettuce连接池配置
+    lettuce:
+      pool:
+        # 连接池最大连接数（使用负值表示没有限制） 默认值为 8
+        max-active: 200
+        # 连接池中的最大空闲连接 默认值 8
+        max-idle: 200
+        # 连接池中的最小空闲连接 默认值 0
+        min-idle: 50
+        # 连接池最大阻塞等待时间，单位毫秒（使用负值表示没有限制）默认 -1 需要指明单位
+        max-wait: -1ms       
+    # 数据库索引 Redis默认情况下有16个分片，这里配置具体使用的分片，默认是0
+    # 对于单机版的Redis，可以使用此参数指定(数据库index),操作使用哪一个数据库
+    #Redis支持多个数据库(默认是16个，可通过配置文件来修改数据库数量)，并且每个数据库的数据是隔离的，不能共享，并且基于单机redis才有
+    # 如果是集群就没有数据库的概念，集群只有一个db0数据库
+    database: 0
+    #redis服务地址
+    host: 127.0.0.1
+    # 端口号
+    port: 6379
+    # 连接密码，默认为空
+    password: 123456
+    # 连接超时时间 单位 ms（毫秒） ，2.0 中该参数的类型为Duration，这里在配置的时候需要指明单位
+    timeout: 3000ms
+    #客户端类型
+    client-type: lettuce
