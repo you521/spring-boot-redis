@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace:指定UserDao接口类的全路径 -->
+<mapper namespace="com.you.redis.dao.UserDao">
+
+  <!-- 查询结果的列名字段和实体类的属性名不对应时，要做如下配置 -->
+  <resultMap id="BaseResultMap" type="user">
+    <!-- id标签：用于指定主键字段 -->
+    <id column="user_id" jdbcType="INTEGER" property="userId" />
+    <!-- result标签：用于指定非主键字段 -->
+    <!-- column属性：用于指定数据库列名 -->
+    <!-- property属性：用于指定实体类属性名称 -->
+    <result column="user_name" jdbcType="VARCHAR" property="userName" />
+    <result column="user_age" jdbcType="INTEGER" property="userAge" />
+    <result column="user_password" jdbcType="VARCHAR" property="userPassword" />
+  </resultMap>
+
+
+  <!-- 通过id查询用户信息； id:对应mapper接口中的方法名称；parameterType:指定输入参数的类型 -->
+  <select id="findUserById"  parameterType="Integer" resultMap="BaseResultMap">
+   SELECT
+   *
+   FROM
+   userinfo
+   WHERE
+   user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询所有用户信息 -->
+  <select id="findAll" resultMap="BaseResultMap">
+   select * from userinfo;
+  </select>
+  
+  <!-- 插入user信息，并返回主键id -->
+  <insert id="saveUser" parameterType="user">
+        <!-- 
+                       将插入数据的主键返回，返回到user对象中
+        
+        =================SELECT LAST_INSERT_ID()：得到刚insert进去记录的主键值，只适用与自增主键
+        
+        keyProperty：将查询到主键值设置到parameterType指定的对象的那个属性
+        keyColumn：数据库中对应的字段名称
+        order：SELECT LAST_INSERT_ID()执行顺序，相对于insert语句来说它的执行顺序
+        resultType：指定SELECT LAST_INSERT_ID()的结果类型
+         -->
+        <selectKey keyProperty="userId" keyColumn="user_id" order="AFTER" resultType="Integer">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        INSERT INTO userinfo(user_name,user_age,user_password)VALUES(#{userName},#{userAge},#{userPassword}) 
+   </insert>
+   
+   <!--根据id删除用户信息-->
+   <delete id="deleteById" parameterType="Integer">
+      delete from userinfo where user_id = #{userId,jdbcType=INTEGER};
+   </delete>
+   
+   <!-- 更新用户信息 -->
+   <update id="updateUser" parameterType="user">
+      update userinfo set user_name=#{userName},user_password=#{userPassword} where user_id = #{userId,jdbcType=INTEGER};
+   </update>
+</mapper>

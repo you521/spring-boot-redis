@@ -5,6 +5,15 @@ server:
     # 设置项目名称
     context-path: /spring-boot-redis
 spring:
+  datasource:
+    # JDBC连接Mysql6以上com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # 数据库地址
+    url: jdbc:mysql://localhost:3306/test?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf8&useSSL=false
+    # 用户名
+    username: root
+    # 密码
+    password: 123456
   # 配置缓存（redis作为缓存）
   cache:
     # 缓存的类型
@@ -37,3 +46,12 @@ spring:
     timeout: 3000ms
     #客户端类型
     client-type: lettuce
+# mybatis配置
+mybatis:
+  # 扫描映射文件
+  mapper-locations:
+  - classpath:mybatis/mapper/*.xml
+  # 配置扫描包的别名，主要是实体类包
+  type-aliases-package: com.you.redis.entity
+  # 加载mybatis文件
+  config-location: classpath:mybatis/mybatis-config.xml
