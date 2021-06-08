@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.you.redis.dao.UserDao;
@@ -11,6 +13,7 @@ import com.you.redis.entity.User;
 import com.you.redis.service.UserService;
 
 @Service(value = "userService")
+@CacheConfig(cacheManager = "defaultCacheManager", cacheNames = {"user"})
 public class UserServiceImpl implements UserService
 {
 
@@ -18,6 +21,7 @@ public class UserServiceImpl implements UserService
     private UserDao userDao;
     
     @Override
+    @Cacheable(key = "'user_'+#id", unless="#result == null")
     public User findUserById(Integer id)
     {
         User user = userDao.findUserById(id);
